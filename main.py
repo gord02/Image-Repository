@@ -32,6 +32,23 @@ def allImages():
 def addImage():
     return render_template("form.html")
 
+@app.route("/add", methods=['POST'])
+def addImagePost():
+    if request.method == "POST":
+        title = request.form["searchValue"]
+        descriptiton = request.form["descriptiton"]
+        file = request.form["file"]
+        print("file: ", type(file))
+        # converts file.jpg of type str into bytes or binary format
+        fileHandle= str.encode(file)
+        image = Image(title=title)
+        image.description = descriptiton
+        # fileHandle= open(file, "rb")
+        image.photo.put(fileHandle, filename= (title+'.jpg'))
+        # image.picture.put(open("Snake.jpg", "rb"))
+        image.save()
+
+    return "ok"
 
 @app.route("/search")
 def search():
