@@ -15,23 +15,7 @@ connect(db='imageRepo')
 app = Flask("__main__")
 
 @app.route("/")
-def my_index():
-    # obj = Image.objects(title='cat.jpg').first()
-    # objs = Image.objects()
-    # # print(objs, type(objs))
-    # json_data = objs.to_json()
-    # dicts = json.loads(json_data)
-    # print(dicts, type(dicts))
-    # # pic= obj.photo.read()
-    # print("0: ", dicts[0])
-    # print("photo: ", dicts[0]['photo'], type(dicts[0]['photo']) )
-    # pic=dicts[0].photo.read()
-    # print("pic: ", pic)
-
-    # print(dicts[0])
-    # List =[]
-    # List.append(dicts[0])
-    # print(List, type(List))
+def allImages():
     pics=[]
     objs = Image.objects()
     for x in objs:
@@ -42,18 +26,6 @@ def my_index():
     for x in pics:
         images.append(b64encode(x).decode("utf-8"))
 
-
-    # json= objs.to_json()
-    # print("json: ", json)
-
-    # obj = Image.objects(title='cat.jpg').first()
-    # "$regex": "Alex"
-    # pic= obj.photo.read()
-    # # pic= obj.picutre.read()
-    # # decoding bytes
-    # image = b64encode(pic).decode("utf-8")
-    # # print(type(image), "image: ", image)
-    # return render_template("index.html", image= image)
     return render_template("allImages.html", images=images)
 
 @app.route("/add")
