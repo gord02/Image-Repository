@@ -4,6 +4,11 @@
         <title>HTML img Tag</title>
     </head>
     <body>
+         <form method='POST' action="/">
+            <label for="Search value label" id="search value label" >Search for image of: </label>
+            <input type="text" class="form-control" name="searchValue"id="searchValue" aria-describedby="search value" placeholder= "Enter title of image to search for"</input>
+            <button type="submit">Sumbit</button>
+        </form>
         {% for image in images %}
       <img src= "data:;base64,{{ image }}" >
        {% endfor %}

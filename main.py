@@ -7,6 +7,7 @@ from schema import Image
 
 import json
 import io
+import base64
 from base64 import b64encode
 
 # allows use to add to the database in mongoDB called covid-checkin
@@ -18,6 +19,8 @@ app = Flask("__main__")
 def allImages():
     pics=[]
     objs = Image.objects()
+    # print("obj: ", objs.to_json())
+
     for x in objs:
         # print(x)
         pics.append(x.photo.read())
@@ -25,8 +28,40 @@ def allImages():
     images=[]
     for x in pics:
         images.append(b64encode(x).decode("utf-8"))
-
+    print("image: ", images[0], "====type: ", type(images[0]))
     return render_template("allImages.html", images=images)
+
+@app.route("/", methods=['POST'])
+def search():
+    if request.method == "POST":
+        title = request.form["searchValue"]
+        print("title: ", title)
+
+        pics=[]
+        objs = Image.objects.search_text(title)
+        # objs = Image.objects()
+        # print("obj: ", objs.to_json())
+
+        for x in objs:
+            # print(x)
+            pics.append(x.photo.read())
+        # print("pics: ", pics)
+        images=[]
+        for x in pics:
+            images.append(b64encode(x).decode("utf-8"))
+
+# ===============
+        # obj = Image.objects.search_text(title).first()
+        # obj = Image.objects.search_text(title).first()
+        # # print("obj: ", obj.to_json())
+        # pic= obj.photo.read()
+        # # decoding bytes
+        # image = b64encode(pic).decode("utf-8")
+        # base64_bytes = image.encode('ascii')
+# =============
+    # print(type(image), "image: ", image)
+    return render_template("show.html", images= images)
+
 
 @app.route("/add")
 def addImage():
@@ -37,28 +72,25 @@ def addImagePost():
     if request.method == "POST":
         title = request.form["searchValue"]
         descriptiton = request.form["descriptiton"]
-        file = request.form["file"]
-        print("file: ", type(file))
-        # converts file.jpg of type str into bytes or binary format
-        fileHandle= str.encode(file)
+        file = request.files['file'].read()
+
+        # picture =base64.b64encode(file)
+
         image = Image(title=title)
         image.description = descriptiton
         # fileHandle= open(file, "rb")
-        image.photo.put(fileHandle, filename= (title+'.jpg'))
+        image.photo.put(file, filename= (title+'.jpg'))
         # image.picture.put(open("Snake.jpg", "rb"))
         image.save()
-
     return "ok"
 
-@app.route("/search")
-def search():
-    # obj = Image.objects(title='cat.jpg').first()
-    obj = Image.objects(title='cat').first()
-    pic= obj.photo.read()
-    # decoding bytes
-    image = b64encode(pic).decode("utf-8")
-    # print(type(image), "image: ", image)
-    return render_template("index.html", image= image)
+# @app.route("/")
+# def searchForImage():
+
+#     return render_template("search.html")
+
+
+
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')

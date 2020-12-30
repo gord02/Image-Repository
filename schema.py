@@ -7,13 +7,21 @@ class Image(Document):
     title= StringField(required=True)
     description= StringField(required=True)
     photo = FileField(required=True)
-    picture = ImageField()
-
-class Pic(Document):
-    title= StringField(required=True)
-    description= StringField(required=True)
-    photo = FileField(required=True)
     # picture = ImageField()
+
+    # meta = {'indexes': [
+    #     {'fields': ['$title', "$description", 'photo'],
+    #      'default_language': 'english',
+    #      'weights': {'title': 10, 'content': 2}
+    #     }
+    # ]}
+    meta = {'strict': False}
+
+# class Pic(Document):
+#     title= StringField(required=True)
+#     description= StringField(required=True)
+#     photo = FileField(required=True)
+#     # picture = ImageField()
     # (size=(800, 600, True)
 
 def addImage():
@@ -33,7 +41,7 @@ def addImage():
     image.description = "dog in sweater "
     fileHandle= open("Dog.jpg", "rb")
     image.photo.put(fileHandle, filename='Dog.jpg')
-    image.picture.put(open("Snake.jpg", "rb"))
+    # image.picture.put(open("Snake.jpg", "rb"))
     image.save()
 
 

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HTML img Tag</title>
+    </head>
+    <body>
+
+    <table style="width:100%">
+        <tr>
+            {% for image in images %}
+                <td> <img src= "data:;base64,{{ image }}" style="height: 200px;"> </td>
+            {% endfor %}
+        </tr>
+    </table>
+
+       
+    </body>
+</html>
