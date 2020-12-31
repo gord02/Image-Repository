@@ -9,8 +9,15 @@
             <input type="text" class="form-control" name="searchValue"id="searchValue" aria-describedby="search value" placeholder= "Enter title of image to search for"</input>
             <button type="submit">Sumbit</button>
         </form>
-        {% for image in images %}
-      <img src= "data:;base64,{{ image }}" >
-       {% endfor %}
+        <table style="width:100%">
+            <tr>
+                {% for image in images %}
+                    <td>
+                        <img src= "data:;base64,{{ image }}" style="width:200px; height: 200px;">
+                        <link to="/image"><button>Image</button</link>
+                    </td> 
+                {% endfor %}
+            </tr>
+        </table>
     </body>
 </html>

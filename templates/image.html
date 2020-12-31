@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HTML img Tag</title>
+    </head>
+    <body>
+        <img src= "data:;base64,{{ image }}" style="width:200px; height: 200px;"> 
+        <form id= "delete" action="/delete?_method=DELETE" method = "POST">
+            <input id="image" aria-describedby="search value" value= {{image}} </input>
+            <button type="submit" id= "right" class=" ui red basic button">Delete Image</button>
+        </form>
+    </body>
+</html>
