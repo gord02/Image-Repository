@@ -10,6 +10,10 @@ import io
 import base64
 from base64 import b64encode
 
+# to convert json object to object
+from collections import namedtuple
+from types import SimpleNamespace
+
 # allows use to add to the database in mongoDB called covid-checkin
 connect(db='imageRepo')
 
@@ -17,35 +21,41 @@ app = Flask("__main__")
 
 @app.route("/")
 def allImages():
-
-    Dict = {}
-    # print("Dict: ", type(Dict))
-    # {'key': 'value'}
-
-    # pics=[]
+    pics=[]
     objs = Image.objects()
-    jsonObj= objs.to_json()
-    Json = json.loads(jsonObj)
 
     for x in objs:
-        # data['a'] = 1
-        Dict[x['_id']] = x['photo'].read()
-    print (Dict)
-    for x in Json:
-        # using dictionary instead of list allows the photo to be attached to its id in the database
-       
-        # Dict[x._id] = (x['photo']).read()
-        Dict[x._id] = (x['photo'].read())
-        
-        Dict[x._id] =  base64.b64encode(bytes(x['photo'], 'utf-8'))
+        # print("1")
+        obj = {
+            'title': x.title,
+            "description": x.description,
+            "image": x.photo.read(),   
+            "id": x.id
+        }
+
+        if(type(obj['image']) is not bytes):
+            print("HERE")
+            print(obj)
+        else:
+            # print("good")
+            pics.append(obj)
         # pics.append(x.photo.read())
-    images={}
-    for x in Dict:
-        images[x] = b64encode(Dict[x]).decode("utf-8")
-        # images.append(b64encode(x).decode("utf-8"))
+
+    # print(pics)
+
+    images=[]
+
+    for x in pics:
+        # print("54: ", x.title)
+        # print("55: ", type(x['image']))
+        x['image']= b64encode(x['image']).decode("utf-8")
+        # images.append(b64encode(x.image).decode("utf-8"))
+        # objsJson['photo']= b64encode(x).decode("utf-8")
+        # loaded['photo']= b64encode(x).decode("utf-8")
     # print("image: ", images[0], "====type: ", type(images[0]))
-    print(images)
-    return render_template("allImages.html", images=images)
+    # print("objsJson: ", objsJson, objsJson[0])
+    # return render_template("allImages.html", images=images)
+    return render_template("allImages.html", images=pics)
 
 @app.route("/", methods=['POST'])
 def search():
@@ -53,20 +63,31 @@ def search():
         title = request.form["searchValue"]
         print("title: ", title)
 
-        Dict = {}
+        pics=[]
         objs = Image.objects.search_text(title)
         # objs = Image.objects()
         # print("obj: ", objs.to_json())
 
         for x in objs:
             # print(x)
-            Dict[x._id] = Dict[x].photo.read()
+            obj = {
+                'title': x.title,
+                "description": x.description,
+                "image": x.photo.read(),   
+                "id": x.id
+            }
+            if(type(obj['image']) is not bytes):
+                print("HERE")
+                print(obj)
+            else:
+                # print("good")
+                pics.append(obj)
             # pics.append(x.photo.read())
         # print("pics: ", pics)
-        images={}
-        for x in Dict:
-            images[x] = b64encode(Dict[x]).decode("utf-8")
+        images=[]
+        for x in pics:
             # images.append(b64encode(x).decode("utf-8"))
+            x['image']= b64encode(x['image']).decode("utf-8")
 
 # ===============
         # obj = Image.objects.search_text(title).first()
@@ -78,12 +99,13 @@ def search():
         # base64_bytes = image.encode('ascii')
 # =============
     # print(type(image), "image: ", image)
-    return render_template("show.html", images= images)
+    return render_template("show.html", images= pics)
+
 
 @app.route("/add")
 def addImage():
     return render_template("form.html")
-# combine routes, better namming
+
 @app.route("/add", methods=['POST'])
 def addImagePost():
     if request.method == "POST":
@@ -101,12 +123,10 @@ def addImagePost():
         image.save()
     return "ok"
 
-@app.route("/delete", methods=['POST'])
-def delete():
-    if request.method == 'POST':
-        image= request.form['delete']
-        print("image: ", image)
-    return render_template("search.html")
+# @app.route("/")
+# def searchForImage():
+
+#     return render_template("search.html")
 
 
 

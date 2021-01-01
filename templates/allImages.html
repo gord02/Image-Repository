@@ -12,10 +12,9 @@
         <table style="width:100%">
             <tr>
                 {% for image in images %}
-                    <td>
-                        <img src= "data:;base64,{{ image }}" style="width:200px; height: 200px;">
-                        <link to="/image"><button>Image</button</link>
-                    </td> 
+                    <h5> {{image['title']}}</h5>
+                    <h5> {{image['description']}}</h5>
+                    <img src= "data:;base64,{{ image['image'] }}" style="width:200px; height: 200px;">
                 {% endfor %}
             </tr>
         </table>

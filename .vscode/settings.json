@@ -1,2 +1,4 @@
 {
+    "python.pythonPath": "/Users/gordon/opt/miniconda3/envs/imageRepository/bin/python",
+    "terminal.integrated.inheritEnv": false
 }
