@@ -8,8 +8,21 @@
     <table style="width:100%">
         <tr>
             {% for image in images %}
-                <td> <img src= "data:;base64,{{ image['image'] }}" style="height: 200px;"> </td>
+                <td> 
+                    <h5 style="display:inline;"> {{image['title']}}</h5>
+                    <img src= "data:;base64,{{ image['image'] }}" style="height: 200px;"> 
+                    <p style="display:inline;"> {{image['description']}}</p>
+                    <form method='POST' action="/image/{{image['id']}}">
+                        <button type="submit">Show</button>
+                    </form>
+                    <form method='POST' action="/delete/{{image['id']}}">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
             {% endfor %}
+            <button>
+                <a href="/">Back</a>
+            </button>
         </tr>
     </table>
 

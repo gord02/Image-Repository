@@ -1,6 +1,6 @@
 import mongoengine
 from mongoengine import *
-from flask import (Flask, render_template, request, send_file)
+from flask import (Flask, render_template, request, send_file, redirect)
 
 from mongoengine import connect
 from schema import Image
@@ -23,7 +23,6 @@ app = Flask("__main__")
 def allImages():
     pics=[]
     objs = Image.objects()
-
     for x in objs:
         # print("1")
         obj = {
@@ -38,23 +37,10 @@ def allImages():
             print(obj)
         else:
             # print("good")
+            obj['image']= b64encode(obj['image']).decode("utf-8")
             pics.append(obj)
         # pics.append(x.photo.read())
 
-    # print(pics)
-
-    images=[]
-
-    for x in pics:
-        # print("54: ", x.title)
-        # print("55: ", type(x['image']))
-        x['image']= b64encode(x['image']).decode("utf-8")
-        # images.append(b64encode(x.image).decode("utf-8"))
-        # objsJson['photo']= b64encode(x).decode("utf-8")
-        # loaded['photo']= b64encode(x).decode("utf-8")
-    # print("image: ", images[0], "====type: ", type(images[0]))
-    # print("objsJson: ", objsJson, objsJson[0])
-    # return render_template("allImages.html", images=images)
     return render_template("allImages.html", images=pics)
 
 @app.route("/", methods=['POST'])
@@ -62,7 +48,6 @@ def search():
     if request.method == "POST":
         title = request.form["searchValue"]
         print("title: ", title)
-
         pics=[]
         objs = Image.objects.search_text(title)
         # objs = Image.objects()
@@ -80,15 +65,8 @@ def search():
                 print("HERE")
                 print(obj)
             else:
-                # print("good")
+                obj['image']= b64encode(obj['image']).decode("utf-8")
                 pics.append(obj)
-            # pics.append(x.photo.read())
-        # print("pics: ", pics)
-        images=[]
-        for x in pics:
-            # images.append(b64encode(x).decode("utf-8"))
-            x['image']= b64encode(x['image']).decode("utf-8")
-
 # ===============
         # obj = Image.objects.search_text(title).first()
         # obj = Image.objects.search_text(title).first()
@@ -123,13 +101,27 @@ def addImagePost():
         image.save()
     return "ok"
 
-# @app.route("/")
-# def searchForImage():
+@app.route("/image/<id>", methods=['POST'])
+def individualImgae(id):
+    for obj in Image.objects(id=id):
+        newObj = {
+            'title': obj.title, 
+            "description": obj.description,
+            "image": obj.photo.read(), 
+            "id": obj.id
+        }
+    newObj['image']= b64encode(newObj['image']).decode("utf-8")
+    return render_template("anImage.html", image=newObj)
 
-#     return render_template("search.html")
-
-
-
+@app.route("/delete/<id>", methods=['POST'])
+def delete(id):
+    if request.method == 'POST':
+        print("delete")
+        Image.objects(id=id).delete()
+        # image= request.form['delete']
+        # print("image: ", image)
+    # return render_template("allImages.html")
+    return redirect("/")
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')

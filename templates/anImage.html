@@ -4,25 +4,19 @@
         <title>HTML img Tag</title>
     </head>
     <body>
-         <form method='POST' action="/">
-            <label for="Search value label" id="search value label" >Search for image of: </label>
-            <input type="text" class="form-control" name="searchValue"id="searchValue" aria-describedby="search value" placeholder= "Enter title of image to search for"</input>
-            <button type="submit">Sumbit</button>
-        </form>
         <table style="width:100%">
             <tr>
                 <td> 
-                    {% for image in images %}
                         <h5 style="display:inline;"> {{image['title']}}</h5>
                         <img src= "data:;base64,{{ image['image'] }}" style="width:200px; height: 200px;">
                         <p style="display:inline;"> {{image['description']}}</p>
-                          <form method='POST' action="/image/{{image['id']}}">
-                            <button type="submit">Show</button>
-                        </form>
                         <form method='POST' action="/delete/{{image['id']}}">
                             <button type="submit">Delete</button>
                         </form>
-                    {% endfor %}
+                          <button>
+                            <a href="/">Back</a>
+                        </button>
+
                 </td>
             </tr>
         </table>
