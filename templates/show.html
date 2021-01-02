@@ -2,29 +2,44 @@
 <html>
     <head>
         <title>HTML img Tag</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     </head>
     <body>
-
-    <table style="width:100%">
-        <tr>
-            {% for image in images %}
-                <td> 
-                    <h5 style="display:inline;"> {{image['title']}}</h5>
-                    <img src= "data:;base64,{{ image['image'] }}" style="height: 200px;"> 
-                    <p style="display:inline;"> {{image['description']}}</p>
-                    <form method='POST' action="/image/{{image['id']}}">
-                        <button type="submit">Show</button>
-                    </form>
-                    <form method='POST' action="/delete/{{image['id']}}">
-                        <button type="submit">Delete</button>
-                    </form>
-                </td>
-            {% endfor %}
-            <button>
-                <a href="/">Back</a>
-            </button>
-        </tr>
-    </table>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Image Repo</a>
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active justify-content-right">
+                <a class="nav-link " href="/add">Add Image</a>
+            </li>
+        </ul>
+    </nav>
+    <nav class="navbar navbar-light bg-light ">
+        <label style= "display: block;" >Search for image of: </label>
+        <form method='POST' action="/" class="form-inline">
+                <input style="width: 1150px;" type="text" class="form-control" name="searchValue"id="searchValue" aria-describedby="search value" placeholder= "Enter title of image to search for"</input>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </nav>
+        <table style="width:100%">
+            <tr>
+                {% for image in images %}
+                    <td style="text-align: center"> 
+                        <h5 style=""> {{image['title']}}</h5>
+                        <img src= "data:;base64,{{ image['image'] }}" style="height: 200px;"> 
+                        <p style=""> Description: {{image['description']}}</p>
+                        <div class="container" style="text-align: center;">
+                            <a type="button"  class="btn btn-primary" style="color:white; margin-left: 5px; display: inline;" href="/image/{{image['id']}}">Show</a>
+                            <form style="display: inline;"  method='POST' action="/delete/{{image['id']}}">
+                                <button class="btn btn-danger" style="display: inline;" type="submit">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                {% endfor %}
+            </tr>
+        </table>
 
        
     </body>

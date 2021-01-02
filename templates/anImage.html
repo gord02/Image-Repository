@@ -2,23 +2,32 @@
 <html>
     <head>
         <title>HTML img Tag</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     </head>
     <body>
-        <table style="width:100%">
-            <tr>
-                <td> 
-                        <h5 style="display:inline;"> {{image['title']}}</h5>
-                        <img src= "data:;base64,{{ image['image'] }}" style="width:200px; height: 200px;">
-                        <p style="display:inline;"> {{image['description']}}</p>
-                        <form method='POST' action="/delete/{{image['id']}}">
-                            <button type="submit">Delete</button>
-                        </form>
-                          <button>
-                            <a href="/">Back</a>
-                        </button>
-
-                </td>
-            </tr>
-        </table>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">Image Repo</a>
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active justify-content-right">
+                    <a class="nav-link " href="/add">Add Image</a>
+                </li>
+            </ul>
+        </nav>
+        <div class="container">
+            <div style="text-align: center; margin: 3%;"> 
+                <h5 >  {{image['title']}}</h5>
+                <img src= "data:;base64,{{ image['image'] }}" style="max-width: 1024px;" >
+                <p > Description: {{image['description']}}</p>
+                <form style ="display :inline" method='POST' action="/delete/{{image['id']}}">
+                    <button class="btn btn-danger" style ="display :inline" type="submit">Delete</button>
+                </form>
+                <button class="btn btn-secondary" style ="display :inline">
+                    <a style ="display :inline; color: white; align: right" href="/">Back</a>
+                </button>
+            </div>
+        </div>        
     </body>
 </html>
