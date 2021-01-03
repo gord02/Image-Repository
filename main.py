@@ -28,16 +28,6 @@ Comments:
 12. Add redis
 """
 
-"""
-AllImages function used for displaying the images from the MongoDb database to be displayed in the flask frontend templates.
-
-title: string -- title of the image
-description: string -- description of the image
-photo: GridFS Object -- image stored in bytes, managed with GridFS
-
-search function is used to limit the results displayed in the frontend allowing user to filter thorugh all the pictures in the database based on a specifc word search
-"""
-
 # allows use to add to the database in mongoDB called covid-checkin
 connect(db='imageRepo')
 
@@ -46,8 +36,11 @@ app = Flask("__main__")
 # setup logging config
 logging.basicConfig(level=logging.INFO)
 
-@app.route("/") #========================================================================================
+@app.route("/")
 def allImages():
+    """
+    AllImages function used for displaying the images from the MongoDB database to be displayed in the flask template frontend component.
+    """
     images = list() 
     # Gets documents from Image collection
     mongoengineObjects = Image.objects()
@@ -73,6 +66,9 @@ def allImages():
 
 @app.route("/", methods=['POST'])
 def search():
+    """
+    Search function is used to limit the results displayed in the frontend allowing user to filter thorugh all the pictures in the database based on a specifc word search
+    """
     if request.method == "POST":
         searchedValue = request.form["searchValue"]
         images = list()
@@ -93,29 +89,30 @@ def search():
 
     return render_template("show.html", images=images)
 
-@app.route("/add")
-def addImage():
-    return render_template("form.html")
-
-@app.route("/add", methods=['POST'])
+@app.route("/addImage", methods=['GET','POST'])
 def addImageToDB():
+    """
+    Route for adding an image to the database
+    """
     if request.method == "POST":
         title = request.form["searchValue"]
-        descriptiton = request.form["descriptiton"]
+        description = request.form["description"]
         file = request.files["file"].read()
 
         # creates a document for image in collection Image
         image = Image(title=title)
-        image.description = descriptiton
+        image.description = description
         image.photo.put(file, filename=(title+".jpg"))
         image.save()
-    return redirect("/")
+        return redirect("/")
+    return render_template("form.html")
 
-# WRONG, INCORRECT
 @app.route("/image/<id>", methods=['GET'])
 def individualImage(id):
     """
-    1. change naming
+    Route for displaying a single image based on id
+
+    id: string -- id of image to be displayed in database
     """
     # redis configuration
     r = redis.Redis(host='localhost', port=6379, db=0)
@@ -149,17 +146,24 @@ def individualImage(id):
 # DELETE route for images in database
 @app.route("/delete/<id>", methods=['POST'])
 def delete(id):
+    """
+    Route for deleting images from the database based on the id passed through url of post request
+
+    id: string -- id of image to be deleted in database
+    """
     if request.method == 'POST':
-        # Image is deleted and the if statement verifys that it was successful
+        # Image is deleted and the if statement verifies that it was successful
         if(Image.objects(id=id).delete() == 0):
-            logging.error("User tried to delete an image unsucessfullly")
+            logging.error("User tried to delete an image unsuccessfully")
     return redirect("/")
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
-    # add docstring explanation
-    # redirect
-    return 'ok'
-app.run(debug=True)
+    """
+    Route created to redirect to homepage of application if route is not already specified 
 
+    path: string -- undefined url
+    """
+    return redirect("/")
+app.run(debug=True)
