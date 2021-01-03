@@ -1,5 +1,5 @@
 """
-Decoder moduel. This code was found in this stackoverflow post:
+Decoder module. This code was found in this stackoverflow post:
 https://stackoverflow.com/questions/23256932/redis-py-and-hgetall-behavior.
 The decoder is used to decode the response from redis.
 """

@@ -1,7 +1,7 @@
 import mongoengine
 from mongoengine import StringField, Document, connect, FileField
 
-connect('imageRepo')
+connect("imageRepo")
 
 # black formatter python, download the package, add to env, run the black linter command on each python file
 
@@ -23,15 +23,22 @@ class Image(Document):
     """
     
     title = StringField(required=True)
-    description= StringField(required=True)
+    description = StringField(required=True)
     photo = FileField(required=True)
-    meta = {'strict': False}
+    meta = {"strict": False}
 
 def addImage(filepath, title, description):
-    image = Image(title='Dog')
+    """
+    Creates image in the MongoDB database based on parameters
+
+    title: string -- title of the image
+    description: string -- description of the image
+    photo: GridFS Object -- image in suffishent file format
+    """
+    image = Image(title="Dog")
     image.description = "dog in sweater"
-    fileHandle= open("Dog.jpg", "rb")
-    image.photo.put(fileHandle, filename='Dog.jpg')
+    fileHandle = open("Dog.jpg", "rb")
+    image.photo.put(fileHandle, filename="Dog.jpg")
     image.save()
 
 if __name__ == "__main__":
