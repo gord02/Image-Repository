@@ -20,7 +20,7 @@ app = Flask("__main__")
 logging.basicConfig(level=logging.INFO)
 
 @app.route("/")
-def DisplayAllImages():
+def displayAllImages():
     """
     This route is used to display the images from the MongoDB database in the jinja2 frontend template.
     """
@@ -91,7 +91,7 @@ def addImageToDB():
     return render_template("form.html")
 
 @app.route("/image/<id>", methods=['GET'])
-def DisplayIndividualImage(id):
+def displayIndividualImage(id):
     """
     Route for displaying a single image based on id
 
@@ -100,13 +100,13 @@ def DisplayIndividualImage(id):
     # redis configuration
     r = redis.Redis(host='localhost', port=6379, db=0)
 
-    # Verifies if the image is in Redis, if it is not in Redis object is stored in Redis
+    # CHecks if the image is in Redis first, if the image is not found in Redis, the image is searched for in mongoDB
     if r.hgetall(id) == {}:
         mongoengineObject = Image.objects(id=id).first()
 
-        # If 
+        # If the image is not found in MongoDB, an error is logged and error page is rendered
         if mongoengineObject is None:
-            logging.error("The user has tried to display image that is not available, image id doesn't correspond to an image")
+            logging.error("The user has tried to display image that is not available, image id doesn't correspond to an image Id: '", id "' was no found")
             return render_template("error.html")
 
         imageObject = {
@@ -117,8 +117,11 @@ def DisplayIndividualImage(id):
         }
         imageObject['image'] = b64encode(imageObject['image']).decode("utf-8")
 
+        # Adds the image to Redis so that the next time it is retrived in this route it will be found in Redis which is a faster process than MongoDB
         r.hmset(id, imageObject)
         imgObjectToSendToHtml = imageObject
+
+    # If the image was found in Redis it will be retrived and send to frontend
     else:
         redisValue = r.hgetall(id) 
         image = decode_redis(redisValue)
@@ -136,7 +139,7 @@ def delete(id):
     if request.method == 'POST':
         # Image is deleted and the if statement verifies that it was successful
         if(Image.objects(id=id).delete() != 1):
-            logging.error("User tried to delete an image unsuccessfully", "Id: ", id)
+            logging.error("User tried to delete an image unsuccessfully. Id: ", id)
 
     return redirect("/")
 
