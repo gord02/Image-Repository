@@ -1,17 +1,6 @@
-import mongoengine
-from mongoengine import StringField, Document, connect, FileField
+from mongoengine import connect, Document, FileField, StringField
 
 connect("imageRepo")
-
-# black formatter python, download the package, add to env, run the black linter command on each python file
-
-"""
-Comments:
-1. remove unnecessary comments
-2. Spacing on each side of equal sign, except for paramters
-3. Docstring comments python for each class and function
-4. Add a space after commas
-"""
 
 class Image(Document):
     """
@@ -35,10 +24,10 @@ def addImage(filepath, title, description):
     description: string -- description of the image
     photo: GridFS Object -- image in suffishent file format
     """
-    image = Image(title="Dog")
-    image.description = "dog in sweater"
-    fileHandle = open("Dog.jpg", "rb")
-    image.photo.put(fileHandle, filename="Dog.jpg")
+    image = Image(title=title)
+    image.description = description
+    fileHandle = open(filepath, "rb")
+    image.photo.put(fileHandle, filename=filepath)
     image.save()
 
 if __name__ == "__main__":
