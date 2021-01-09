@@ -116,28 +116,31 @@ def individualImage(id):
     """
     # redis configuration
     r = redis.Redis(host='localhost', port=6379, db=0)
-    mongoengineObject = Image.objects(id=id).first()
+    # ENV MAKE A DOT.ENV
 
-    if mongoengineObject is None:
-        logging.error("The user has tried to display image that is not available, image id doesn't correspond to an image")
-        return render_template("error.html")
+    # ---------------------------------------------
 
-    imageObject = {
-        "title": mongoengineObject.title, 
-        "description": mongoengineObject.description,
-        "image": mongoengineObject.photo.read(), 
-        "id": str(mongoengineObject.id)
-    }
-    imageObject['image'] = b64encode(imageObject['image']).decode("utf-8")
-    object_id = imageObject['id']
 
     # Verifies if image is in reddis, if not it is added and object is stored in Redis
     if r.hgetall(id) == {}:
+        mongoengineObject = Image.objects(id=id).first()
+
+        if mongoengineObject is None:
+            logging.error("The user has tried to display image that is not available, image id doesn't correspond to an image")
+            return render_template("error.html")
+
+        imageObject = {
+            "title": mongoengineObject.title, 
+            "description": mongoengineObject.description,
+            "image": mongoengineObject.photo.read(), 
+            "id": str(mongoengineObject.id)
+        }
+        imageObject['image'] = b64encode(imageObject['image']).decode("utf-8")
+
         r.hmset(id, imageObject)
         imgObjectToSendToHtml = imageObject
     else:
         redisValue = r.hgetall(id) 
-        # print(redisValue)
         image = decode_redis(redisValue)
         imgObjectToSendToHtml = image
 
