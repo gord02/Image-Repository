@@ -100,13 +100,13 @@ def displayIndividualImage(id):
     # redis configuration
     r = redis.Redis(host='localhost', port=6379, db=0)
 
-    # CHecks if the image is in Redis first, if the image is not found in Redis, the image is searched for in mongoDB
+    # Checks if the image is in Redis first, if the image is not found in Redis, the image is searched for in mongoDB
     if r.hgetall(id) == {}:
         mongoengineObject = Image.objects(id=id).first()
 
         # If the image is not found in MongoDB, an error is logged and error page is rendered
         if mongoengineObject is None:
-            logging.error("The user has tried to display image that is not available, image id doesn't correspond to an image Id: '", id "' was no found")
+            logging.error("The user has tried to display image that is not available, image id doesn't correspond to an image Id: '", id "' was not found")
             return render_template("error.html")
 
         imageObject = {
@@ -120,9 +120,8 @@ def displayIndividualImage(id):
         # Adds the image to Redis so that the next time it is retrived in this route it will be found in Redis which is a faster process than MongoDB
         r.hmset(id, imageObject)
         imgObjectToSendToHtml = imageObject
-
-    # If the image was found in Redis it will be retrived and send to frontend
     else:
+        # If the image was found in Redis it will be retrived and send to frontend
         redisValue = r.hgetall(id) 
         image = decode_redis(redisValue)
         imgObjectToSendToHtml = image
