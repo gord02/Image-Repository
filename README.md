@@ -5,6 +5,7 @@ An image repository application that uses restful routing and other backend engi
 
 ### Project Structure
 For this application there are three distinct layers: the frontend which is responsible for rendering the images, the backend which is responsible for server side logic, and data storage used to save and retrieve image data.
+![Layers of App](IMG_4065.PNG)
 
 ### Instructions
 At the index route of this application there will be a search bar where the name of the movie you would like to search for, or nominate can be inputed. The input value must be a correctly spelled word and should be at least some part of the desired movie you wish to find. For instance, if I wanted to search for the movie “Toy Story”, inputting “toy”, “story” and “Toy Story” will all display some results of the “Toy Story” franchise, but the more specific the input value, the better the results. Once finished inputting a value, press “return” on the keyboard or search icon so that the list movies closest to your inputted value will be displayed below.
@@ -15,8 +16,7 @@ Retrieval from redis proves to be faster than using the MongoDB database for bot
 
 In the image below I indicate the timing analysis used to compare the cache hit and cache miss speeds of redis when compared to mongodb.
 
-
-![Redis Speed Check](IMG_4065.PNG)
+![Redis Speed Check](Screen Shot 2021-01-02 at 12.41.25 PM.png)
 
 As shown here where each retrieval of data was timed, Redis proves to be 3.9 times (or 290%) faster when the image is not in Redis or MongoDB, and 7.6 times (or 660%) faster when images are present within both Redis and MongoDB.
 I chose to use Redis for the retrieval of a single image because I realized that adding this caching logic to the index route would be the same as retrieving all the images from MongoDB and storing them all into Redis as well. This is an infeasible step to take as when the image repository gets too large, the cache will not be efficiently utilized.
