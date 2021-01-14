@@ -4,8 +4,10 @@
 An image repository application that uses restful routing and other backend engineering principles.
 
 ### Project Structure
-
 For this application there are three distinct layers: the frontend which is responsible for rendering the images, the backend which is responsible for server side logic, and data storage used to save and retrieve image data.
+
+### Instructions
+At the index route of this application there will be a search bar where the name of the movie you would like to search for, or nominate can be inputed. The input value must be a correctly spelled word and should be at least some part of the desired movie you wish to find. For instance, if I wanted to search for the movie “Toy Story”, inputting “toy”, “story” and “Toy Story” will all display some results of the “Toy Story” franchise, but the more specific the input value, the better the results. Once finished inputting a value, press “return” on the keyboard or search icon so that the list movies closest to your inputted value will be displayed below.
 
 ### Redis Caching Layer
 I decided to include a Redis caching layer in the backend project because I knew Redis could greatly improve the speed at which images would be retrieved from the backend. 
