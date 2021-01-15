@@ -7,7 +7,7 @@ An image repository application that uses restful routing and other backend engi
 For this application there are three distinct layers: the frontend which is responsible for rendering the images, the backend which is responsible for server side logic, and data storage used to save and retrieve image data.
 ![Layers of App](IMG_4065.PNG)
 
-### Instructions
+### How The Project Works
 At the index route of this application, there will be a search bar, as well as a grid that should be empty that displays all images stored in MongoDB database. Inputting a value into the search bar allows you to filter the images in the database based on a string search functionality found in MongoDB. In the navbar at the very top of the application there is a “Home” button which is the index route that displays all images in the database, and there will also be a button for “add Image” which allows you to add an Image to the database.
 
 
