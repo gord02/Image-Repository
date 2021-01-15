@@ -20,9 +20,9 @@ def addImage(filepath, title, description):
     """
     Creates image in the MongoDB database based on parameters
 
+    filepath: string -- path to the file of image 
     title: string -- title of the image
     description: string -- description of the image
-    photo: GridFS Object -- image in suffishent file format
     """
     image = Image(title=title)
     image.description = description

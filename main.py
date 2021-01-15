@@ -122,8 +122,7 @@ def displayIndividualImage(id):
         r.hmset(id, imageObject)
         imgObjectToSendToHtml = imageObject
     else:
-        # If the image was found in Redis it will be retrived and send to frontend
-        # redisValue = r.hgetall(id) 
+        # If the image was found in Redis it will be sent to frontend
         image = decode_redis(redisValue)
         imgObjectToSendToHtml = image
 
