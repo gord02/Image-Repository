@@ -100,8 +100,9 @@ def displayIndividualImage(id):
     # redis configuration
     r = redis.Redis(host='localhost', port=6379, db=0)
 
+    redisValue = r.hgetall(id)
     # Checks if the image is in Redis first, if the image is not found in Redis, the image is searched for in mongoDB
-    if r.hgetall(id) == {}:
+    if redisValue == {}:
         mongoengineObject = Image.objects(id=id).first()
 
         # If the image is not found in MongoDB, an error is logged and error page is rendered
@@ -122,7 +123,7 @@ def displayIndividualImage(id):
         imgObjectToSendToHtml = imageObject
     else:
         # If the image was found in Redis it will be retrived and send to frontend
-        redisValue = r.hgetall(id) 
+        # redisValue = r.hgetall(id) 
         image = decode_redis(redisValue)
         imgObjectToSendToHtml = image
 
